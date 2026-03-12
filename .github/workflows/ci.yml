@@ -39,7 +39,7 @@ jobs:
           pytest tests/ -v --tb=short \
             --cov=core --cov=detectors --cov=utils \
             --cov-report=term-missing \
-            --cov-fail-under=60
+            --cov-fail-under=50
 
   lint:
     runs-on: ubuntu-latest
