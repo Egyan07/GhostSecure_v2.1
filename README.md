@@ -1,222 +1,122 @@
 # GhostSecure 2.1
 
-**Active Directory Attack Detector for Windows**  
-Runs as a background Windows service and alerts your team the moment it detects a live AD attack — Kerberoasting, Pass-the-Hash, DCSync, Golden Ticket, and more.
+<p align="center">
+  <b>Active Directory Attack Detector for Windows</b><br>
+  Runs as a background Windows service and alerts your team the moment it detects a live AD attack.
+</p>
 
-> Built by Egyan | Red Parrot Accounting Ltd
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-Windows%20Server%20%7C%20Windows%2010%2F11-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/python-3.10%2B-yellow?style=for-the-badge&logo=python" />
+  <img src="https://img.shields.io/badge/version-2.1.1-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/tests-53%20passing-brightgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/license-MIT-purple?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/status-active-success?style=for-the-badge" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/detects-Kerberoasting-critical?style=flat-square" />
+  <img src="https://img.shields.io/badge/detects-Pass--the--Hash-critical?style=flat-square" />
+  <img src="https://img.shields.io/badge/detects-DCSync-critical?style=flat-square" />
+  <img src="https://img.shields.io/badge/detects-Golden%20Ticket-critical?style=flat-square" />
+  <img src="https://img.shields.io/badge/detects-AS--REP%20Roasting-critical?style=flat-square" />
+  <img src="https://img.shields.io/badge/detects-LDAP%20Recon-critical?style=flat-square" />
+  <img src="https://img.shields.io/badge/detects-Skeleton%20Key-critical?style=flat-square" />
+</p>
 
 ---
 
-## What It Does
+## Overview
 
-GhostSecure monitors your Windows Security Event Log in real time and fires an alert the moment it spots a known Active Directory attack pattern. It runs silently as a Windows service — no window, no interaction needed. When it detects something, a popup appears on the admin's screen immediately.
+**GhostSecure** monitors the **Windows Security Event Log in real time** and fires an alert the moment it detects a known **Active Directory attack pattern**.
+
+It runs silently as a **Windows service**, survives reboots, and requires no user interaction once installed.
+
+When suspicious activity is found, GhostSecure can:
+
+- Display an immediate **desktop popup alert**
+- Send **email notifications**
+- Log detections to a structured local log file
+- Show live detection stats in the built-in dashboard
+
+Built by **Egyan** | **Red Parrot Accounting Ltd**
 
 ---
 
-## Attacks Detected
+## Why GhostSecure?
 
-| Attack | Event IDs Monitored | Description |
-|---|---|---|
-| **Kerberoasting** | 4769 | Unusual Kerberos service ticket requests — attacker harvesting crackable tickets offline |
-| **Pass-the-Hash** | 4624 | NTLM logon without a matching prior interactive session — stolen hash being used |
-| **DCSync (Mimikatz)** | 4662 | Replication privileges invoked by a non-DC account — attacker dumping all password hashes |
-| **Golden Ticket** | 4768, 4769 | TGT issued with abnormal lifetime or encryption — forged Kerberos ticket in use |
-| **LDAP Recon / BloodHound** | 1644 | Burst of LDAP queries — network mapping tool scanning for attack paths |
-| **AS-REP Roasting** | 4768 | Pre-auth not required on an account — attacker grabbing crackable AS-REP hashes |
-| **Skeleton Key** | 4673 | Sensitive privilege use on DC — malware implant allowing master-password login |
-| **Audit Log Cleared** | 1102 | Security log wiped — attacker covering their tracks |
+Active Directory attacks often leave traces in Windows Security logs before they become full-scale compromise events.
+
+GhostSecure gives you a lightweight way to detect common attack techniques such as:
+
+- Kerberoasting
+- Pass-the-Hash
+- DCSync
+- Golden Ticket
+- LDAP reconnaissance / BloodHound-style enumeration
+- AS-REP Roasting
+- Skeleton Key behavior
+- Security log clearing
 
 ---
 
 ## Features
 
-- Runs as a **Windows Service** — starts automatically, survives reboots
-- **Real-time detection** — monitors Security Event Log continuously
-- **Desktop popup alerts** via `msg.exe` to the admin workstation
-- **Email alerts** (optional SMTP — password stored in environment variable, never hardcoded)
-- **Alert deduplication** — same attack only fires once every 5 minutes, not 100 times
-- **Status dashboard** — `python main.py --gui` shows live detection stats
-- **Configurable exclusions** — whitelist accounts for false positive suppression
+- **Runs as a Windows Service** — starts automatically and survives reboots
+- **Real-time detection** — continuously monitors Windows Security Event Logs
+- **Instant popup alerts** via `msg.exe`
+- **Optional email alerts** using SMTP
+- **No hardcoded secrets** — passwords stored in environment variables
+- **Alert deduplication** — avoids alert storms with cooldown logic
+- **Live status dashboard** — run with `python main.py --gui`
+- **Configurable exclusions** — reduce false positives with whitelisting
 - **Structured logging** to `C:\SecurityLogs\ad_attack_log.txt`
+- **Tested release** — 53 unit tests across core components
+
+---
+
+## Attacks Detected
+
+| Attack | Event IDs | Description |
+|-------|-----------|-------------|
+| **Kerberoasting** | `4769` | Unusual Kerberos service ticket requests; attacker harvesting crackable tickets offline |
+| **Pass-the-Hash** | `4624` | NTLM logon without a matching prior interactive session; stolen hash may be in use |
+| **DCSync (Mimikatz)** | `4662` | Replication privileges invoked by a non-DC account; attacker attempting to dump password hashes |
+| **Golden Ticket** | `4768`, `4769` | TGT issued with abnormal lifetime or encryption characteristics; forged Kerberos ticket suspected |
+| **LDAP Recon / BloodHound** | `1644` | Burst of LDAP queries indicating enumeration or path-mapping activity |
+| **AS-REP Roasting** | `4768` | Pre-authentication not required on an account; attacker may be collecting crackable AS-REP hashes |
+| **Skeleton Key** | `4673` | Sensitive privilege use on a DC; may indicate malware implant activity |
+| **Audit Log Cleared** | `1102` | Security event log wiped; attacker may be covering tracks |
+
+---
+
+## Architecture
+
+GhostSecure is built around a simple, defensive architecture:
+
+1. **Read** Windows Security Event Logs continuously
+2. **Match** suspicious events against detector logic
+3. **Deduplicate** repeated detections to prevent noise
+4. **Alert** via popup and/or email
+5. **Log** detections for later review
+6. **Display** activity in a live dashboard
 
 ---
 
 ## Requirements
 
-- Windows Server 2016+ or Windows 10/11 (domain-joined)
-- Python 3.10+
-- Domain Administrator rights for installation
-- Windows Advanced Audit Policy logging enabled (see below)
-- `pywin32` for Windows service support
+- **Windows Server 2016+** or **Windows 10/11**
+- **Domain-joined** machine
+- **Python 3.10+**
+- **Domain Administrator rights** for installation
+- **Windows Advanced Audit Policy logging enabled**
+- **pywin32** for Windows service support
 
 ---
 
 ## Installation
 
+### 1. Install dependencies
+
 ```bash
 pip install pywin32 ldap3
-```
-
-1. Copy this folder to the Domain Controller or a domain-joined machine
-2. Open `config.py` and configure:
-   - `ADMIN_HOSTNAME` — computer name where alert popups should appear
-   - `KNOWN_DOMAIN_CONTROLLERS` — your DC hostnames e.g. `["DC01", "DC02"]`
-   - `DOMAIN_NAME` — your domain e.g. `"REDPARROT"`
-3. Right-click `Install.bat` → **Run as administrator**
-4. Done — service starts automatically
-
-**Verify it's running:**
-```cmd
-sc query GhostSecure2ADDetector
-```
-Should show `STATE: RUNNING`.
-
----
-
-## Enabling Windows Audit Logging (Required)
-
-GhostSecure needs Windows to record security events. Without this it has nothing to monitor.
-
-1. Open **Group Policy Management** on the Domain Controller
-2. Edit **Default Domain Controllers Policy**
-3. Navigate to: `Computer Configuration > Policies > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies`
-4. Enable **Success and Failure** for:
-   - Account Logon → Audit Kerberos Authentication Service
-   - Account Logon → Audit Kerberos Service Ticket Operations
-   - DS Access → Audit Directory Service Access
-   - Logon/Logoff → Audit Logon
-   - Privilege Use → Audit Sensitive Privilege Use
-   - System → Audit Security State Change
-5. Run: `gpupdate /force`
-
----
-
-## Email Alerts (Optional)
-
-1. Set `ENABLE_EMAIL_ALERTS = True` in `config.py`
-2. Fill in your SMTP server details
-3. Store your password as a system environment variable — **never hardcode it**:
-
-```powershell
-# Run PowerShell as Administrator
-[System.Environment]::SetEnvironmentVariable(
-  'GHOSTSECURE_SMTP_PASSWORD', 'YourPasswordHere', 'Machine')
-```
-
-Restart the service after setting the variable.
-
----
-
-## Dashboard
-
-```cmd
-python main.py --gui
-```
-
-Shows live detection counts, service status, and recent alerts.
-
----
-
-## Running Tests
-
-GhostSecure ships with 53 unit tests covering all 7 detectors, alert manager, time helpers, and AD helpers.
-
-```bash
-pip install pytest
-pytest tests/ -v
-```
-
----
-
-## Project Structure
-
-```
-GhostSecure/
-├── main.py                    # Entry point — service + CLI + GUI launcher
-├── config.py                  # All settings <- edit this before deploying
-├── Install.bat                # Installs and starts the Windows service
-├── Uninstall.bat              # Stops and removes the service
-├── build.bat                  # Packages into standalone exe
-├── core/
-│   ├── alert_manager.py       # Alert dispatch, deduplication, logging
-│   ├── detector_engine.py     # Orchestrates all detectors
-│   └── event_reader.py        # Windows Security Event Log reader
-├── detectors/
-│   ├── kerberoasting.py
-│   ├── pass_the_hash.py
-│   ├── dcsync.py
-│   ├── golden_ticket.py
-│   ├── ldap_recon.py
-│   ├── asrep_roasting.py
-│   └── skeleton_key.py
-├── utils/
-│   ├── ad_helpers.py          # LDAP helpers (GSSAPI auth)
-│   └── time_helpers.py
-├── gui/
-│   └── status_dashboard.py    # Live status dashboard
-└── tests/
-    ├── test_detectors.py      # 29 tests across all 7 detectors
-    ├── test_alert_manager.py  # 6 tests: init, format, cooldown, count
-    ├── test_time_helpers.py   # 12 tests
-    └── test_ad_helpers.py     # 6 tests
-```
-
----
-
-## Uninstall
-
-Right-click `Uninstall.bat` → **Run as administrator**.  
-Stops and removes the service. Log files at `C:\SecurityLogs\` are preserved.
-
----
-
-## Changelog
-
-**v2.1.1** *(current)*
-- Fixed: Pervasive curly/smart quotes used as string delimiters — caused `SyntaxError` on Python 3.10+
-- Fixed: `starttls()` called without SSL context — no certificate verification, MITM-able — now uses `ssl.create_default_context()`
-- Fixed: Self-test checked for `GhostSecure 2.0` but `config.py` was `2.1` — test always failed
-- Fixed: 14 files had module headers saying `2.0` while `config.py` was `2.1` — all updated
-- Fixed: `EMAIL_SUBJECT_PREFIX` hardcoded `2.0` in `config.py` — updated to `2.1`
-- Fixed: `build.bat`, `Install.bat`, `Uninstall.bat` all referenced `2.0` — updated
-- Fixed: 3 silent `except Exception: pass` blocks in `status_dashboard.py` — now log to `logger.debug`
-- Fixed: Encoding mojibake in all user-facing alert strings — replaced with clean `-`
-- Added: `tests/test_detectors.py` — 29 tests across all 7 detectors
-- Added: `tests/test_alert_manager.py` — 6 tests: init, format, cooldown, count
-- Added: `tests/test_time_helpers.py` — 12 tests
-- Added: `tests/test_ad_helpers.py` — 6 tests
-- Added: `.github/workflows/ci.yml` — Python 3.10/3.11/3.12, syntax check, pytest with coverage, flake8
-- 53 unit tests total, all passing
-
-**v2.1**
-- Fixed: SMTP password now read from `GHOSTSECURE_SMTP_PASSWORD` env var — never hardcoded
-- Fixed: `alerts_triggered` counter was always 0 — now correctly tracked and shown in dashboard
-- Fixed: Golden Ticket `_tgt_issuance` dict was not thread-safe — added `threading.Lock()`
-- Fixed: Pass-the-Hash logon tracking was not thread-safe — added `threading.Lock()`
-- Fixed: LDAP Windows auth now uses SASL/GSSAPI instead of broken NTLM empty-password bind
-- Fixed: GUI dashboard showed frozen stats — DetectorEngine now runs in background thread
-- Fixed: Pass-the-Hash false positives in office hours — window extended to 8 hours (28800s)
-- Fixed: Event reader re-processed same events on each cycle — `EventRecordID` now tracked
-- Fixed: Audit log clear had no account exclusions — `AUDIT_LOG_CLEAR_EXCLUDED_ACCOUNTS` added
-- Fixed: LDAP bind password also moved to `GHOSTSECURE_LDAP_PASSWORD` env var
-
-**v2.0**
-- Initial release — 8 AD attack detectors, Windows service architecture
-
----
-
-## Disclaimer
-
-GhostSecure is an **early warning system**, not a complete security solution. It detects known attack patterns from Windows event logs — it does not block attacks or replace a full EDR/SIEM. Always investigate and respond when an alert fires.
-
-Under GDPR/ICO guidelines, security logs should be retained for at least 12 months.
-
----
-
-## License
-
-MIT License — free to use, modify, and distribute.
-
----
-
-*Built by Egyan | Red Parrot Accounting Ltd*
