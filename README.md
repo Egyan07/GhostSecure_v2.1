@@ -1,163 +1,113 @@
-# GhostSecure 2.1
+GhostSecure 2.1
+<p align="center"> <img src="https://img.shields.io/github/v/release/Egyan07/GhostSecure?style=for-the-badge" alt="Release"> <img src="https://img.shields.io/github/license/Egyan07/GhostSecure?style=for-the-badge" alt="License"> <img src="https://img.shields.io/github/actions/workflow/status/Egyan07/GhostSecure/ci.yml?branch=main&style=for-the-badge" alt="CI"> <img src="https://img.shields.io/github/stars/Egyan07/GhostSecure?style=for-the-badge" alt="Stars"> <img src="https://img.shields.io/github/forks/Egyan07/GhostSecure?style=for-the-badge" alt="Forks"> <img src="https://img.shields.io/github/issues/Egyan07/GhostSecure?style=for-the-badge" alt="Issues"> </p><p align="center"> <img src="https://img.shields.io/badge/platform-Windows-blue?style=flat-square&logo=windows" alt="Platform"> <img src="https://img.shields.io/badge/python-3.10%2B-yellow?style=flat-square&logo=python" alt="Python"> <img src="https://img.shields.io/badge/tests-53%20passing-brightgreen?style=flat-square" alt="Tests"> <img src="https://img.shields.io/badge/status-active-success?style=flat-square" alt="Status"> <img src="https://img.shields.io/badge/domain-Active%20Directory-red?style=flat-square" alt="Active Directory"> </p><p align="center"> <b>Active Directory Attack Detector for Windows</b><br> Runs silently as a background Windows service and alerts your team the moment it detects live AD attack activity. </p><p align="center"> Detects <b>Kerberoasting</b> • <b>Pass-the-Hash</b> • <b>DCSync</b> • <b>Golden Ticket</b> • <b>LDAP Recon</b> • <b>AS-REP Roasting</b> • <b>Skeleton Key</b> • <b>Audit Log Clearing</b> </p>
+Contents
+Overview
+Why GhostSecure
+Key Features
+Attacks Detected
+Quick Start
+Requirements
+Installation
+Windows Audit Policy Configuration
+Configuration
+Email Alerts
+Dashboard
+Screenshots
+Running Tests
+Project Structure
+Architecture
+Uninstall
+FAQ
+Contributing
+Support
+Changelog
+Disclaimer
+License
+Credits
+Overview
+GhostSecure is a lightweight Active Directory attack detector for Windows that continuously monitors the Windows Security Event Log in real time.
 
-<p align="center">
-  <img src="https://img.shields.io/github/v/release/Egyan07/GhostSecure?style=for-the-badge" alt="Release">
-  <img src="https://img.shields.io/github/license/Egyan07/GhostSecure?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/github/actions/workflow/status/Egyan07/GhostSecure/ci.yml?branch=main&style=for-the-badge" alt="CI">
-  <img src="https://img.shields.io/github/stars/Egyan07/GhostSecure?style=for-the-badge" alt="Stars">
-  <img src="https://img.shields.io/github/forks/Egyan07/GhostSecure?style=for-the-badge" alt="Forks">
-  <img src="https://img.shields.io/github/issues/Egyan07/GhostSecure?style=for-the-badge" alt="Issues">
-</p>
+It is designed to run as a background Windows service, requiring no user interaction after installation. When suspicious AD attack behavior is detected, GhostSecure can immediately:
 
-<p align="center">
-  <img src="https://img.shields.io/badge/platform-Windows-blue?style=flat-square&logo=windows" alt="Platform">
-  <img src="https://img.shields.io/badge/python-3.10%2B-yellow?style=flat-square&logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/tests-53%20passing-brightgreen?style=flat-square" alt="Tests">
-  <img src="https://img.shields.io/badge/status-active-success?style=flat-square" alt="Status">
-  <img src="https://img.shields.io/badge/domain-Active%20Directory-red?style=flat-square" alt="Active Directory">
-</p>
+display a desktop popup alert
+send an email notification
+write to a local structured log
+update a live monitoring dashboard
+GhostSecure is ideal as an early warning layer for AD environments that want quick visibility into known attack techniques without deploying a full SIEM or EDR stack.
 
-<p align="center">
-  <b>Active Directory Attack Detector for Windows</b><br>
-  Runs silently as a background Windows service and alerts your team the moment it detects live AD attack activity.
-</p>
+Built by Egyan | Red Parrot Accounting Ltd
 
-<p align="center">
-  Detects <b>Kerberoasting</b> • <b>Pass-the-Hash</b> • <b>DCSync</b> • <b>Golden Ticket</b> • <b>LDAP Recon</b> • <b>AS-REP Roasting</b> • <b>Skeleton Key</b> • <b>Audit Log Clearing</b>
-</p>
-
----
-
-## Contents
-
-- [Overview](#overview)
-- [Why GhostSecure](#why-ghostsecure)
-- [Key Features](#key-features)
-- [Attacks Detected](#attacks-detected)
-- [Quick Start](#quick-start)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Windows Audit Policy Configuration](#windows-audit-policy-configuration)
-- [Configuration](#configuration)
-- [Email Alerts](#email-alerts)
-- [Dashboard](#dashboard)
-- [Screenshots](#screenshots)
-- [Running Tests](#running-tests)
-- [Project Structure](#project-structure)
-- [Architecture](#architecture)
-- [Uninstall](#uninstall)
-- [FAQ](#faq)
-- [Contributing](#contributing)
-- [Support](#support)
-- [Changelog](#changelog)
-- [Disclaimer](#disclaimer)
-- [License](#license)
-- [Credits](#credits)
-
----
-
-## Overview
-
-**GhostSecure** is a lightweight **Active Directory attack detector for Windows** that continuously monitors the **Windows Security Event Log** in real time.
-
-It is designed to run as a **background Windows service**, requiring no user interaction after installation. When suspicious AD attack behavior is detected, GhostSecure can immediately:
-
-- display a **desktop popup alert**
-- send an **email notification**
-- write to a **local structured log**
-- update a **live monitoring dashboard**
-
-GhostSecure is ideal as an **early warning layer** for AD environments that want quick visibility into known attack techniques without deploying a full SIEM or EDR stack.
-
-Built by **Egyan** | **Red Parrot Accounting Ltd**
-
----
-
-## Why GhostSecure
-
+Why GhostSecure
 Many Active Directory attack techniques generate recognizable Windows event patterns before privilege escalation, credential theft, or domain compromise is complete.
 
 GhostSecure focuses on detecting those patterns early.
 
-### Good fit for:
-- Small to mid-sized Windows environments
-- Internal security teams
-- MSP / IT administrators
-- Domain Controller monitoring
-- Lab and research environments
-- Blue team visibility and alerting
+Good fit for:
+Small to mid-sized Windows environments
+Internal security teams
+MSP / IT administrators
+Domain Controller monitoring
+Lab and research environments
+Blue team visibility and alerting
+Useful when you want:
+simple deployment
+immediate on-screen alerts
+minimal operational overhead
+focused AD attack detection
+a service-based detector rather than a full platform
+Key Features
+Windows Service based
 
-### Useful when you want:
-- simple deployment
-- immediate on-screen alerts
-- minimal operational overhead
-- focused AD attack detection
-- a service-based detector rather than a full platform
+starts automatically
+survives reboots
+runs silently in the background
+Real-time event monitoring
 
----
+continuously reads the Windows Security Event Log
+detects suspicious activity as it happens
+Attack-specific detection logic
 
-## Key Features
+built-in detectors for common AD attack techniques
+Popup desktop alerts
 
-- **Windows Service based**
-  - starts automatically
-  - survives reboots
-  - runs silently in the background
+uses msg.exe to notify the admin workstation immediately
+Optional email notifications
 
-- **Real-time event monitoring**
-  - continuously reads the Windows Security Event Log
-  - detects suspicious activity as it happens
+SMTP supported
+passwords stored in environment variables, never hardcoded
+Alert deduplication
 
-- **Attack-specific detection logic**
-  - built-in detectors for common AD attack techniques
+the same alert only triggers once within a cooldown window
+reduces noise and alert storms
+Dashboard mode
 
-- **Popup desktop alerts**
-  - uses `msg.exe` to notify the admin workstation immediately
+launch with python main.py --gui
+shows live service and detection status
+Configurable exclusions
 
-- **Optional email notifications**
-  - SMTP supported
-  - passwords stored in environment variables, never hardcoded
+whitelist trusted accounts to reduce false positives
+Structured logging
 
-- **Alert deduplication**
-  - the same alert only triggers once within a cooldown window
-  - reduces noise and alert storms
+writes detections to:
+C:\SecurityLogs\ad_attack_log.txt
+Tested codebase
 
-- **Dashboard mode**
-  - launch with `python main.py --gui`
-  - shows live service and detection status
+53 unit tests included
+CI workflow for Python 3.10 / 3.11 / 3.12
+Attacks Detected
+Attack	Event IDs	Description
+Kerberoasting	4769	Unusual Kerberos service ticket requests suggesting offline ticket harvesting
+Pass-the-Hash	4624	NTLM network logon without expected matching session history
+DCSync (Mimikatz)	4662	Replication privileges used by a non-DC account to request AD secrets
+Golden Ticket	4768, 4769	Abnormal TGT or ticket behavior that may indicate forged Kerberos tickets
+LDAP Recon / BloodHound	1644	Burst LDAP enumeration consistent with reconnaissance or attack path mapping
+AS-REP Roasting	4768	Accounts with pre-authentication disabled may be targeted for offline cracking
+Skeleton Key	4673	Sensitive privilege activity on a domain controller that may indicate implant behavior
+Audit Log Cleared	1102	Security log clearing activity indicating possible defense evasion
+Quick Start
+1. Install dependencies
+Bash
 
-- **Configurable exclusions**
-  - whitelist trusted accounts to reduce false positives
-
-- **Structured logging**
-  - writes detections to:
-    - `C:\SecurityLogs\ad_attack_log.txt`
-
-- **Tested codebase**
-  - 53 unit tests included
-  - CI workflow for Python 3.10 / 3.11 / 3.12
-
----
-
-## Attacks Detected
-
-| Attack | Event IDs | Description |
-|---|---|---|
-| **Kerberoasting** | `4769` | Unusual Kerberos service ticket requests suggesting offline ticket harvesting |
-| **Pass-the-Hash** | `4624` | NTLM network logon without expected matching session history |
-| **DCSync (Mimikatz)** | `4662` | Replication privileges used by a non-DC account to request AD secrets |
-| **Golden Ticket** | `4768`, `4769` | Abnormal TGT or ticket behavior that may indicate forged Kerberos tickets |
-| **LDAP Recon / BloodHound** | `1644` | Burst LDAP enumeration consistent with reconnaissance or attack path mapping |
-| **AS-REP Roasting** | `4768` | Accounts with pre-authentication disabled may be targeted for offline cracking |
-| **Skeleton Key** | `4673` | Sensitive privilege activity on a domain controller that may indicate implant behavior |
-| **Audit Log Cleared** | `1102` | Security log clearing activity indicating possible defense evasion |
-
----
-
-## Quick Start
-
-### 1. Install dependencies
-
-```bash
 pip install pywin32 ldap3
 2. Clone the repository
 Bash
@@ -551,9 +501,4 @@ Credits
 Built by Egyan
 Red Parrot Accounting Ltd
 
-<p align="center"> <a href="https://github.com/Egyan07/GhostSecure">GitHub Repository</a> • <a href="https://github.com/Egyan07/GhostSecure/issues">Report an Issue</a> </p> ```
-
-
-
-
-
+<p align="center"> <a href="https://github.com/Egyan07/GhostSecure">GitHub Repository</a> • <a href="https://github.com/Egyan07/GhostSecure/issues">Report an Issue</a> </p>
