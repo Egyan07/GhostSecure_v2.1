@@ -1,4 +1,4 @@
-# 👻 GhostSecure
+# GhostSecure
 
 ### Active Directory Attack Detector for Windows
 
