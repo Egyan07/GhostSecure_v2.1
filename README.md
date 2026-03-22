@@ -2,12 +2,12 @@
 
 ### Active Directory Attack Detector for Windows
 
-![GitHub stars](https://img.shields.io/github/stars/Egyan07/GhostSecure_v2.1?style=social)
-![GitHub forks](https://img.shields.io/github/forks/Egyan07/GhostSecure_v2.1?style=social)
-![GitHub issues](https://img.shields.io/github/issues/Egyan07/GhostSecure_v2.1)
-![GitHub last commit](https://img.shields.io/github/last-commit/Egyan07/GhostSecure_v2.1)
-![License](https://img.shields.io/github/license/Egyan07/GhostSecure_v2.1)
-![CI](https://github.com/Egyan07/GhostSecure_v2.1/actions/workflows/ci.yml/badge.svg)
+![GitHub stars](https://img.shields.io/github/stars/Egyan07/GhostSecure?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Egyan07/GhostSecure?style=social)
+![GitHub issues](https://img.shields.io/github/issues/Egyan07/GhostSecure)
+![GitHub last commit](https://img.shields.io/github/last-commit/Egyan07/GhostSecure)
+![License](https://img.shields.io/github/license/Egyan07/GhostSecure)
+![CI](https://github.com/Egyan07/GhostSecure/actions/workflows/ci.yml/badge.svg)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
